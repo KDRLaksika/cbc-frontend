@@ -1,10 +1,15 @@
+import {Link} from "react-router-dom";
 import UserData from "./userData";
 
 export default function Header() {
     return(
-        <div className="bg-gray-800 text-white p-4 flex flex-col items-center justify-center">
-            <h1 className="text-2xl font-bold">Crystal Beauty Clear</h1>
-            <p className="text-[15px]">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+        <div className="bg-gray-800 text-white p-4 flex flex-col items-center justify-center">           
+            <nav className="flex space-x-4 mb-4">
+                <Link to="/" className="text-white hover:text-gray-300">Home</Link>
+                <Link to="/login" className="text-white hover:text-gray-300">Login</Link>
+                <Link to="/signup" className="text-white hover:text-gray-300">Sign Up</Link>
+                <a href="https://google.com" className="text-white hover:text-gray-300">Google</a>
+            </nav>
             <UserData />
         </div>
     )
