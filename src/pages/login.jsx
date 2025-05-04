@@ -1,29 +1,48 @@
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+
 export default function LoginPage() {
+
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  async function handleLogin() {
+    
+    try {
+      const response = await axios.post("http://localhost:3000/api/users/login", {
+        email: email,
+        password: password
+      })
+      toast.success("Login successful!");
+      console.log(response.data);
+    }
+    catch (error) {
+      //console.error("Error logging in:", error);
+      toast.error("Login failed. Please check your credentials.");
+    }
+
+  }
+
   return (
-    <div className="w-full h-screen bg-red-100 flex flex-col items-center justify-evenly">
-      <div className="w-[650px] h-[650px] bg-red-900 flex flex-col items-center justify-center">
-        <div className="relative w-[600px] h-[600px] bg-green-400 flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold">Login</h1>
-          <form className="flex flex-col items-center justify-center">
-            <input
-              type="text"
-              placeholder="Username"
-              className="mb-4 p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="mb-4 p-2 border border-gray-300 rounded"
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white p-2 rounded"
-            >
-              Login
-            </button>
-          </form>
-        </div>
+    <div className="w-full h-screen bg-[url('/login.jpg')] bg-center bg-cover flex items-center justify-evenly">
+
+      <div className="w-[50%] h-full">
+
       </div>
+
+      <div className="w-[50%] h-full flex items-center justify-center">
+
+        <div className="w-[500px] h-[600px] backdrop-blur-md rounded-[20px] shadow-xl flex flex-col items-center justify-center gap-[20px]">
+
+          <input onChange={(e) => setEmail(e.target.value)}  type="email" placeholder="Username" value={email} className="w-[300px] h-[50px] rounded-[10px] border-2 border-[#77dec7]"/>
+          <input onChange={(e) => setPassword(e.target.value)}  type="password" placeholder="Password" value={password} className="w-[300px] h-[50px] rounded-[10px] border-2 border-[#77dec7]"/>
+          <button onClick={handleLogin} className="w-[200px] h-[50px] rounded-[10px] bg-[#77dec7] text-white font-bold text-[20px] cursor-pointer transform hover:scale-102">Login</button>
+
+        </div>
+
+      </div>
+      
     </div>
   );
 }
