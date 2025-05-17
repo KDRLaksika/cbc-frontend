@@ -16,15 +16,14 @@ function App() {
    <BrowserRouter>
    <div>
    <Toaster position='top-right' />
-    <Header />
+    {/* <Header /> */}
     <Routes path="/*">
-      <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<RegisterPage />} />
       <Route path="/admin/*" element={<AdminPage />} />
       <Route path="/testing" element={<TestPage />} />
       <Route path="/testing2" element={<TestPage2 />} />
-      <Route path="/*" element={<h1>Page Not Found 404 Error</h1>} />
+      <Route path="/*" element={<HomePage />} />
     </Routes>
    </div>
    </BrowserRouter>
