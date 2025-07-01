@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Header from "../components/header";
 import ProductPage from "./client/productPage";
 import ProductOverviewPage from "./client/productOverviewPage";
+import CartPage from "./client/cart";
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
             <Route path="/products" element={<ProductPage/>} />
             <Route path="/about" element={<h1>About</h1>} />
             <Route path="/contact" element={<h1>Contact</h1>} />
+            <Route path="/cart" element={<CartPage/>} />
             <Route path="/overview/:Id" element={<ProductOverviewPage/>} />
             <Route path="/*" element={<h1>404 Not Found</h1>} />
           </Routes>
