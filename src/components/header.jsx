@@ -1,7 +1,6 @@
 import {Link} from "react-router-dom";
-import UserData from "./userData";
-import { use } from "react";
 import { useNavigate } from "react-router-dom";
+import { BsCart3 } from "react-icons/bs";
 
 export default function Header() {
 
@@ -20,7 +19,10 @@ export default function Header() {
                 
             </div>
 
-            <div className="w-[80px] bg-blue-600"> 
+            <div className="w-[80px] flex items-center justify-center">
+                <Link to="/cart" className="text-[20px] font-bold mx-2">
+                    <BsCart3/>
+                </Link> 
             </div>         
             
         </header>
