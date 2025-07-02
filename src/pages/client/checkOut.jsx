@@ -1,32 +1,55 @@
 import React, { useState } from "react";
-import { addToCart, getCart, removeFromCart } from "../../utils/cart";
 import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
-import { gettotal } from "../../utils/cart";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-export default function CartPage() {
-    const [cart, setCart] = useState(getCart());
+export default function CheckoutPage() {
+
+    const location = useLocation();
+    console.log(location.state.cart);
+    const [cart, setCart] = useState(location.state?.cart || []);
+
+    function gettotal() {
+        let total = 0;
+        cart.forEach((item) => {
+            total += item.price * item.qty;
+        });
+        return total;
+    }
+
+    function removeFromCart(index) {
+        const newCart = cart.filter((item, i) => i !== index);
+        setCart(newCart);
+    }
+
+    function changeQuantity(index, qty) {
+        const newQty = cart[index].qty + qty;
+        if (newQty <= 0) {
+            removeFromCart(index);
+            return;
+        }else{
+        const newCart = [...cart];
+        newCart[index].qty = newQty;
+        setCart(newCart);
+        }
+    }
+
     return (
         <div className="w-full h-full flex flex-col items-center pt-4 relative">
 
             <div className="w-[400px] h-[100px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center">
                 <p className="text-2xl text-secondary font-bold">Total:
                     <span className="text-accent font-bold mx-2">
-                        {gettotal().toFixed(2)}
+                        {gettotal().toFixed(2) || 0}
                     </span>
                 </p>
-                <Link to="/checkout" state={
-                    {
-                        cart: cart,
-                    }
-                } className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300">
-                    Checkout
-                </Link>
+                <button className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300">
+                    Place Order
+                </button>
             </div>
 
             {
                 cart.map(
-                    (item) => (
+                    (item, index) => (
                        
                             <div key={item.productId} className="w-[600px] my-4 h-[100px] rounded-tl-3xl rounded-bl-3xl bg-primary shadow-2xl flex flex-row relative justify-center items-center">
                                 <img src={item.image}  className="w-[100px] h-[100px] object-cover rounded-3xl" />
@@ -49,15 +72,13 @@ export default function CartPage() {
                                 <div className="max-w-[100px] w-[100px] h-full flex flex-row justify-center items-center">
 
                                     <button className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent" onClick={() => {
-                                        addToCart(item, -1); 
-                                        setCart(getCart());
+                                        changeQuantity(index, -1);
                                         }}><BiMinus/></button>
 
                                     <span className="text-secondary font-semibold text-xl mx-2">{item.qty}</span>
 
                                     <button className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent" onClick={() => {
-                                        addToCart(item, 1);
-                                        setCart(getCart());
+                                       changeQuantity(index, 1);
                                     }}><BiPlus/></button>
 
                                 </div>
@@ -65,8 +86,7 @@ export default function CartPage() {
                                     <h1 className="text-2xl text-secondary font-semibold">Rs. ${item.price * item.qty}</h1>
                                 </div>
                                 <button className="absolute text-red-600 cursor-pointer hover:bg-red-600 hover:text-white rounded-full p-2 right-[-40px]" onClick={() => {
-                                    removeFromCart(item.productId);
-                                    setCart(getCart());
+                                    removeFromCart(index);
                                 }}>
                                     <BiTrash/>
                                 </button>
