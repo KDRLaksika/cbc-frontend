@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { BiMinus, BiPlus, BiTrash } from "react-icons/bi";
 import { useLocation } from "react-router-dom";
 
@@ -7,6 +9,8 @@ export default function CheckoutPage() {
     const location = useLocation();
     console.log(location.state.cart);
     const [cart, setCart] = useState(location.state?.cart || []);
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [address, setAddress] = useState("");
 
     function gettotal() {
         let total = 0;
@@ -33,16 +37,65 @@ export default function CheckoutPage() {
         }
     }
 
+    async function placeOrder() {
+        const token = localStorage.getItem("token");
+        console.log("Token being sent:", token); // Add this line to check the token
+        if (!token) {
+            alert("Please login to place an order");
+            return;
+        }
+
+        const orderinformation = {
+            products : [],
+            phone : phoneNumber,
+            address : address,
+        };
+
+        for (let i = 0; i < cart.length; i++) {
+            const item = {
+                productId: cart[i].productId,
+                quantity: cart[i].qty,
+            }
+            orderinformation.products[i] = item;
+        }
+
+        try{
+                const response = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/orders", orderinformation, {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            })
+            toast.success("Order placed successfully!");
+            console.log(response.data);
+        }catch(error) {
+            console.log("Error placing order:", error);
+            alert("Failed to place order. Please try again later.");
+            return;
+        }
+
+    }
+
     return (
         <div className="w-full h-full flex flex-col items-center pt-4 relative">
 
-            <div className="w-[400px] h-[100px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center">
+            <div className="w-[400px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center">
                 <p className="text-2xl text-secondary font-bold">Total:
                     <span className="text-accent font-bold mx-2">
                         {gettotal().toFixed(2) || 0}
                     </span>
                 </p>
-                <button className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300">
+
+                <div className="flex flex-col justify-center items-center mt-4 gap-2">
+
+                        <input type="text" placeholder="Phone Number" className="w-[300px] h-[40px] rounded-lg px-2 border-1 border-accent"
+                            value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+
+                        <input type="text" placeholder="Address" className="w-[300px] h-[40px] rounded-lg px-2 border-1 border-accent" 
+                        value={address} onChange={(e) => setAddress(e.target.value)} />
+
+                </div>
+
+                <button className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300 mt-2" onClick={placeOrder}>
                     Place Order
                 </button>
             </div>
