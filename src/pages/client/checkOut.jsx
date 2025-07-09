@@ -56,8 +56,11 @@ export default function CheckoutPage() {
                 productId: cart[i].productId,
                 quantity: cart[i].qty,
             }
-            orderinformation.products[i] = item;
+            //orderinformation.products[i] = item;
+            orderinformation.products.push(item);
         }
+
+        console.log("Order payload:", orderinformation);
 
         try{
                 const response = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/orders", orderinformation, {
