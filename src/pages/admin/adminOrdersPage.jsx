@@ -87,10 +87,42 @@ export default function AdminOrdersPage() {
                     <span className="font-semibold">Address:</span>
                     <span>{activeOrder.address}</span>
                   </div>
+
                   <div className="flex justify-between">
                     <span className="font-semibold">Status:</span>
                     <span className="capitalize">{activeOrder.status}</span>
+
+                    <select onChange={async(e) => {const updatedValue = e.target.value;
+                        try{
+                          await axios.put(
+                            import.meta.env.VITE_BACKEND_URL + "/api/orders/" + activeOrder.orderId + "/" + updatedValue,
+                            {},
+                            {
+                              headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem("token"),
+                              },
+                            }
+                          );
+                          setIsLoading(true);
+                          const updatedOrders = {...activeOrder};
+                          updatedOrders.status = updatedValue;
+                          setActiveOrder(updatedOrders);
+                        }catch(e) {
+                          toast.error("Error updating order status");
+                          console.log(e);    
+                        }
+                    }} className="ml-2 bg-white border border-gray-300 rounded px-2 py-1 text-sm">
+
+                      <option selected disabled>Change Status</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                      <option value="Shipped">Shipped</option>
+
+                    </select>
+
                   </div>
+                  
                   <div className="flex justify-between">
                     <span className="font-semibold">Labelled Total:</span>
                     <span>${activeOrder.labelledTotal.toFixed(2)}</span>
@@ -174,7 +206,9 @@ export default function AdminOrdersPage() {
                           ? "bg-green-100 text-green-600"
                           : order.status === "Pending"
                           ? "bg-yellow-100 text-yellow-600"
-                          : "bg-gray-100 text-gray-600"
+                          : order.status === "Cancelled"
+                          ? "bg-red-100 text-red-600"
+                          : "bg-blue-100 text-blue-600"
                       }`}
                     >
                       {order.status}
