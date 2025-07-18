@@ -8,6 +8,7 @@ export default function Header() {
 
      const [sideDrawerOpened, setSideDrawerOpened] = useState(false);
      const navigate = useNavigate();
+     const token = localStorage.getItem("token");
 
     return(
         <header className="w-full h-[80px] shadow-2xl flex justify-center relative">
@@ -25,7 +26,17 @@ export default function Header() {
                 
             </div>
 
-            <div className="w-[80px] hidden md:flex items-center justify-center">
+            <div className="w-[160px] hidden md:flex items-center justify-center">
+                {
+                    token == null ?
+                    <Link to="/login" className="text-[20px] font-bold mx-2">Logout</Link>
+                    :
+                    <button onClick={() => {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("user");
+                        window.location.href = "/";
+                    }} className="text-[20px] font-bold mx-2">Logout</button>
+                }
                 <Link to="/cart" className="text-[20px] font-bold mx-2">
                     <BsCart3/>
                 </Link> 
@@ -50,6 +61,16 @@ export default function Header() {
                             <a href="/about" className="text-[20px] font-bold mx-2 my-4">About</a>
                             <a href="/contact" className="text-[20px] font-bold mx-2 my-4">Contact</a>
                             <a href="/search" className="text-[20px] font-bold mx-2 my-4">Search</a>
+                            {
+                                token == null ?
+                                <a href="/login" className="text-[20px] font-bold mx-2 my-4">Logout</a>
+                                :
+                                <button onClick={() => {
+                                    localStorage.removeItem("token");
+                                    localStorage.removeItem("user");
+                                    window.location.href = "/";
+                                }} className="text-[20px] font-bold mx-2 my-4">Logout</button>
+                            }
                             <a href="/cart" className="text-[20px] font-bold mx-2 my-4">
                                 <BsCart3 />
                             </a>
