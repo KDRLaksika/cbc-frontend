@@ -11,11 +11,11 @@ export default function Header() {
      const token = localStorage.getItem("token");
 
     return(
-        <header className="w-full h-[80px] shadow-2xl flex justify-center relative">
+        <header className="w-full h-[80px] shadow-1xl flex justify-center relative bg-pink-200">
 
             <GiHamburgerMenu className="h-full text-3xl md:hidden absolute left-2" onClick={() => {setSideDrawerOpened(true)}}/>
 
-            <img onClick={() => navigate("/")} src="/logo.png" alt="Logo" className="w-[80px] h-[70px] object-cover cursor-pointer top-0 left-0 m-2" />
+            <img onClick={() => navigate("/")} src="/logo.png" alt="Logo" className="w-[90px] h-[80px] object-cover  cursor-pointer top-0 left-0 " />
             <div className="w-[calc(100%-160px)] h-full hidden md:flex items-center justify-center">
                 <Link to="/" className=" text-2xl font-bold">Home</Link>
                 <Link to="/products" className="text-2xl font-bold ml-4">Products</Link>
