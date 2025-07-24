@@ -78,81 +78,99 @@ export default function CheckoutPage() {
 
     }
 
-    return (
-        <div className="w-full h-full flex flex-col items-center pt-4 relative">
+return (
+    <div className="w-full h-full flex flex-col items-center pt-4 relative">
+        {/* Cart Items First */}
+        {
+            cart.map((item, index) => (
+                <div key={item.productId} className="w-[95%] md:w-[600px] my-4 h-auto md:h-[100px] rounded-3xl bg-primary shadow-2xl flex flex-col md:flex-row relative justify-center items-center p-2">
+                    
+                    <img src={item.image} className="w-[100px] h-[100px] object-cover rounded-3xl" />
 
-            <div className="w-[400px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center">
-                <p className="text-2xl text-secondary font-bold">Total:
-                    <span className="text-accent font-bold mx-2">
-                        {gettotal().toFixed(2) || 0}
-                    </span>
-                </p>
+                    <div className="w-full md:w-[250px] flex flex-col justify-center items-start pl-4 mt-2 md:mt-0">
+                        <h1 className="text-xl text-secondary font-semibold">{item.name}</h1>
+                        <h1 className="text-md text-gray-600 font-semibold">{item.productId}</h1>
+                        {
+                            item.labelledPrice > item.price ? (
+                                <div>
+                                    <span className='text-md mx-1 text-gray-500 line-through'>${item.labelledPrice.toFixed(2)} </span>
+                                    <span className='text-md mx-1 font-bold text-accent'>${item.price.toFixed(2)}</span>
+                                </div>
+                            ) : (
+                                <div>
+                                    <span className='text-md mx-1 font-bold text-accent'>${item.price.toFixed(2)}</span>
+                                </div>
+                            )
+                        }
+                    </div>
 
-                <div className="flex flex-col justify-center items-center mt-4 gap-2">
+                    <div className="flex flex-row justify-center items-center mt-2 md:mt-0">
+                        <button
+                            className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent"
+                            onClick={() => changeQuantity(index, -1)}
+                        >
+                            <BiMinus />
+                        </button>
 
-                        <input type="text" placeholder="Phone Number" className="w-[300px] h-[40px] rounded-lg px-2 border-1 border-accent"
-                            value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                        <span className="text-secondary font-semibold text-xl mx-2">{item.qty}</span>
 
-                        <input type="text" placeholder="Address" className="w-[300px] h-[40px] rounded-lg px-2 border-1 border-accent" 
-                        value={address} onChange={(e) => setAddress(e.target.value)} />
+                        <button
+                            className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent"
+                            onClick={() => changeQuantity(index, 1)}
+                        >
+                            <BiPlus />
+                        </button>
+                    </div>
 
+                    <div className="w-full md:w-[200px] flex justify-end md:justify-end pr-4 mt-2 md:mt-0">
+                        <h1 className="text-2xl text-secondary font-semibold">Rs. ${item.price * item.qty}</h1>
+                    </div>
+
+                    <button
+                        className="absolute text-red-600 cursor-pointer hover:bg-red-600 hover:text-white rounded-full p-2 right-2 top-2 md:right-[-40px]"
+                        onClick={() => removeFromCart(index)}
+                    >
+                        <BiTrash />
+                    </button>
                 </div>
+            ))
+        }
 
-                <button className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300 mt-2" onClick={placeOrder}>
-                    Place Order
-                </button>
+        {/* Total Box (After Cart Items to place below on sm) */}
+        <div className="w-[95%] sm:static sm:mt-4 md:w-[400px] md:shadow-2xl md:absolute md:top-1 md:right-1 flex flex-col justify-center items-center m-3">
+            <p className="text-2xl text-secondary font-bold">Total:
+                <span className="text-accent font-bold mx-2">
+                    {gettotal().toFixed(2) || 0}
+                </span>
+            </p>
+
+            <div className="flex flex-col justify-center items-center mt-4 gap-2">
+                <input
+                    type="text"
+                    placeholder="Phone Number"
+                    className="w-full max-w-[300px] h-[40px] rounded-lg px-2 border border-accent"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+
+                <input
+                    type="text"
+                    placeholder="Address"
+                    className="w-full max-w-[300px] h-[40px] rounded-lg px-2 border border-accent"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                />
             </div>
 
-            {
-                cart.map(
-                    (item, index) => (
-                       
-                            <div key={item.productId} className="w-[600px] my-4 h-[100px] rounded-tl-3xl rounded-bl-3xl bg-primary shadow-2xl flex flex-row relative justify-center items-center">
-                                <img src={item.image}  className="w-[100px] h-[100px] object-cover rounded-3xl" />
-
-                                <div className="w-[250] h-full flex flex-col justify-center items-start pl-4">
-                                    <h1 className="text-xl text-secondary font-semibold">{item.name}</h1>
-                                    <h1 className="text-md text-gray-600 font-semibold">{item.productId}</h1>
-                                    {
-                                        item.labelledPrice > item.price ?
-                                        <div>
-                                            <span className='text-md mx-1 text-gray-500 line-through'>${item.labelledPrice.toFixed(2)} </span>
-                                            <span className='text-md mx-1 font-bold text-accent'>${item.price.toFixed(2)}</span>
-                                        </div>
-                                        :
-                                        <div>
-                                        <span className='text-md mx-1 font-bold text-accent'>${item.price.toFixed(2)}</span>
-                                        </div>
-                                    }
-                                </div>
-                                <div className="max-w-[100px] w-[100px] h-full flex flex-row justify-center items-center">
-
-                                    <button className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent" onClick={() => {
-                                        changeQuantity(index, -1);
-                                        }}><BiMinus/></button>
-
-                                    <span className="text-secondary font-semibold text-xl mx-2">{item.qty}</span>
-
-                                    <button className="text-white font-bold rounded-xl hover:bg-secondary p-2 text-xl cursor-pointer aspect-square bg-accent" onClick={() => {
-                                       changeQuantity(index, 1);
-                                    }}><BiPlus/></button>
-
-                                </div>
-                                <div className="w-[200px] h-full flex flex-col justify-center items-end pr-4">
-                                    <h1 className="text-2xl text-secondary font-semibold">Rs. ${item.price * item.qty}</h1>
-                                </div>
-                                <button className="absolute text-red-600 cursor-pointer hover:bg-red-600 hover:text-white rounded-full p-2 right-[-40px]" onClick={() => {
-                                    removeFromCart(index);
-                                }}>
-                                    <BiTrash/>
-                                </button>
-                            </div>
-                       
-
-                    )
-
-                )
-            }
+            <button
+                className="text-white bg-accent px-4 py-2 rounded-lg font-bold hover:bg-secondary transition-all duration-300 mt-2"
+                onClick={placeOrder}
+            >
+                Place Order
+            </button>
         </div>
-    )
+    </div>
+);
+
+
 }
